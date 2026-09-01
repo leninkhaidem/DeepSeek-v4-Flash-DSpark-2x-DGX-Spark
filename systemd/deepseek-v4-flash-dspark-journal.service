@@ -1,0 +1,20 @@
+[Unit]
+Description=DeepSeek V4 Flash engine log forwarder
+PartOf=deepseek-v4-flash-dspark.service
+After=deepseek-v4-flash-dspark.service docker.service
+
+[Service]
+Type=simple
+User=lenin
+Group=lenin
+SupplementaryGroups=docker
+ExecStart=/usr/bin/docker logs --follow --since 10s deepseek-v4-flash-vllm-dspark-1
+Restart=always
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=deepseek-v4-flash-dspark-engine
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only

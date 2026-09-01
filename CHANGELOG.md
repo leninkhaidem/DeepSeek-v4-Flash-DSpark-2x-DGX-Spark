@@ -1,3 +1,9 @@
+## 2026-09-02
+
+### Fixed
+
+- **Bounded streamed tool-argument silence for long DeepSeek V4 string values**: the unified parser engine gated partial argument conversion on `arg_structural_chars=frozenset(">")`, so an agent writing HTML emitted normally through `<style>` and then produced no `function.arguments` SSE deltas throughout a long CSS block. `patches/hotfix-dsv4-arg-streaming.py` now forces the existing converter and prefix-safety path after at most 512 pending argument characters. A 62K HTML/CSS parser regression emits throughout CSS and reconstructs the exact original JSON; structural-character behavior remains unchanged.
+
 ## 2026-09-01
 
 ### Fixed

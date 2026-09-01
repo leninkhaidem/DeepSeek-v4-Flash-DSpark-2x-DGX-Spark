@@ -112,7 +112,7 @@ def vision_chat(vl_url: str, model: str, image_b64: str, prompt: str, timeout: f
                 ],
             }
         ],
-        "max_tokens": 64,
+        "max_tokens": 256,
         "temperature": 0.0,
     }
     started = time.perf_counter()

@@ -365,6 +365,15 @@ the in-flight call and retry; normal model-stopped tool calls keep
 blindly replay `args` from streaming deltas can still hit a 400 - verify your
 client drops an in-progress tool call on `finish_reason: "length"`.
 
+DeepSeek V4's parser engine otherwise waits for `>` before converting streamed
+tool arguments. Long string values such as the CSS between `<style>` and
+`</style>` can therefore decode for minutes without an SSE
+`function.arguments` delta. The fail-closed
+`patches/hotfix-dsv4-arg-streaming.py` forces a converter attempt after at most
+512 pending characters; the existing JSON prefix-safety and schema checks
+still control emission. This bounds client-visible silence without converting
+the complete accumulated argument on every token.
+
 
 ### Thinking-token budgets
 

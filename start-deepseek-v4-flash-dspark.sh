@@ -1063,6 +1063,12 @@ if [ -f "$DSPARK_ISSUE55_HOTFIX" ]; then
   ssh "$WORKER_HOST" "mkdir -p '${REMOTE_WORKER_DIR}/patches'"
   scp "$DSPARK_ISSUE55_HOTFIX" "${WORKER_HOST}:${REMOTE_WORKER_DIR}/patches/hotfix-dsv4-issue55-tool-truncation.py"
 fi
+DSPARK_ARG_STREAMING_HOTFIX="${DSPARK_ARG_STREAMING_HOTFIX:-$SCRIPT_DIR/patches/hotfix-dsv4-arg-streaming.py}"
+if [ -f "$DSPARK_ARG_STREAMING_HOTFIX" ]; then
+  echo "Syncing bounded tool-argument streaming hotfix to ${WORKER_HOST}:${WORKER_DIR}/patches/"
+  ssh "$WORKER_HOST" "mkdir -p '${REMOTE_WORKER_DIR}/patches'"
+  scp "$DSPARK_ARG_STREAMING_HOTFIX" "${WORKER_HOST}:${REMOTE_WORKER_DIR}/patches/hotfix-dsv4-arg-streaming.py"
+fi
 DSPARK_EMPTY_ENCODER_OUTPUT_HOTFIX="${DSPARK_EMPTY_ENCODER_OUTPUT_HOTFIX:-$SCRIPT_DIR/patches/hotfix-vllm-empty-encoder-output.py}"
 if [ -f "$DSPARK_EMPTY_ENCODER_OUTPUT_HOTFIX" ]; then
   echo "Syncing Issue #109 empty-encoder-output hotfix to ${WORKER_HOST}:${WORKER_DIR}/patches/"

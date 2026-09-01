@@ -42,6 +42,7 @@ py_files+=(
   scripts/test-issue26-swa-min-v2.py
   scripts/test-issue31-thinking-budget-gpu.py
   scripts/test-issue55-tool-truncation.py
+  scripts/test-dsv4-arg-streaming.py
   scripts/test-responses-api-live.py
   scripts/verify-issue138-responses-history-live.py
   scripts/test-issue138-responses-history-hotfix.py
@@ -79,6 +80,8 @@ python3 scripts/test-issue31-thinking-budget-gpu.py -q
 ok "test-issue31-thinking-budget-gpu"
 python3 scripts/test-issue55-tool-truncation.py -q
 ok "test-issue55-tool-truncation"
+python3 scripts/test-dsv4-arg-streaming.py -q
+ok "test-dsv4-arg-streaming"
 python3 scripts/test-responses-api-live.py -q
 ok "test-responses-api-live"
 python3 scripts/test-issue138-responses-history-hotfix.py -q
@@ -249,6 +252,13 @@ if grep -q 'hotfix-dsv4-issue55-tool-truncation.py' docker-compose.dspark.yml \
 else
   bad "compose must apply issue #55 with || exit 1"
 fi
+if grep -Fq 'hotfix-dsv4-arg-streaming.py}:/opt/hotfix-dsv4-arg-streaming.py:ro' docker-compose.dspark.yml \
+  && grep -Fq 'python3 /opt/hotfix-dsv4-arg-streaming.py || exit 1' docker-compose.dspark.yml \
+  && grep -Fq 'scp "$DSPARK_ARG_STREAMING_HOTFIX" "${WORKER_HOST}:${REMOTE_WORKER_DIR}/patches/hotfix-dsv4-arg-streaming.py"' start-deepseek-v4-flash-dspark.sh; then
+  ok "bounded tool-argument streaming hotfix is mounted, fail-closed, and worker-synced"
+else
+  bad "bounded tool-argument streaming hotfix wiring is incomplete"
+fi
 if grep -Fq 'hotfix-vllm-empty-encoder-output.py}:/opt/hotfix-vllm-empty-encoder-output.py:ro' docker-compose.dspark.yml \
   && grep -Fq 'python3 /opt/hotfix-vllm-empty-encoder-output.py || exit 1' docker-compose.dspark.yml \
   && grep -Fq 'scp "$DSPARK_EMPTY_ENCODER_OUTPUT_HOTFIX" "${WORKER_HOST}:${REMOTE_WORKER_DIR}/patches/hotfix-vllm-empty-encoder-output.py"' start-deepseek-v4-flash-dspark.sh; then
@@ -335,6 +345,7 @@ for p in \
   patches/hotfix-encoding-dsv4-issue21.py \
   patches/hotfix-dsv4-issue31-v2-thinking-budget-gpu.py \
   patches/hotfix-dsv4-issue55-tool-truncation.py \
+  patches/hotfix-dsv4-arg-streaming.py \
   patches/hotfix-dsv4-issue26-hybrid-swa-min.py \
   patches/hotfix-dsv4-issue27-partial-prefill-concurrency.py \
   patches/hotfix-dsv4-issue133-triton-specialization.py \

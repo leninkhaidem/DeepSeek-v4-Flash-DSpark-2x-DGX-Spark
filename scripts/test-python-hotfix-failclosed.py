@@ -14,6 +14,7 @@ START = ROOT / "start-deepseek-v4-flash-dspark.sh"
 ENCODING_TOKEN = "python3 /opt/hotfix-encoding-dsv4-issue21.py"
 RUNTIME_TOKEN = "python3 /opt/hotfix-dsv4-issue27-partial-prefill-concurrency.py"
 ISSUE138_TOKEN = "python3 /opt/hotfix-vllm-issue138-responses-history.py"
+ARG_STREAM_TOKEN = "python3 /opt/hotfix-dsv4-arg-streaming.py"
 LAUNCHER_BEGIN = "# Issue #138 Responses history compatibility pre-flight (begin)."
 LAUNCHER_END = "# Issue #138 Responses history compatibility pre-flight (end)."
 ISSUE136_TOKEN = "python3 /opt/hotfix-vllm-issue136-xgrammar-termination.py"
@@ -58,6 +59,7 @@ class PythonHotfixFailClosedTest(unittest.TestCase):
         cls.encoding_line = _compose_line(ENCODING_TOKEN)
         cls.runtime_line = _compose_line(RUNTIME_TOKEN)
         cls.issue138_line = _compose_line(ISSUE138_TOKEN)
+        cls.arg_stream_line = _compose_line(ARG_STREAM_TOKEN)
         start_source = START.read_text()
         cls.launcher_preflight = start_source.split(LAUNCHER_BEGIN, 1)[1].split(
             LAUNCHER_END, 1
@@ -198,6 +200,20 @@ class PythonHotfixFailClosedTest(unittest.TestCase):
             ],
         )
         self.assertTrue(reached)
+
+    def test_argument_streaming_hotfix_runs_fail_closed(self):
+        proc, invocations, reached = self._run_line(self.arg_stream_line)
+        self.assertEqual(proc.returncode, 0, proc.stdout + proc.stderr)
+        self.assertEqual(invocations, ["hotfix-dsv4-arg-streaming.py"])
+        self.assertTrue(reached)
+
+        proc, invocations, reached = self._run_line(
+            self.arg_stream_line,
+            fail_step="hotfix-dsv4-arg-streaming.py",
+        )
+        self.assertEqual(proc.returncode, 1, proc.stdout + proc.stderr)
+        self.assertEqual(invocations, ["hotfix-dsv4-arg-streaming.py"])
+        self.assertFalse(reached)
 
     def test_issue138_unset_zero_and_non_one_values_do_not_invoke_patcher(self):
         for value in (None, "0", "true", "2"):

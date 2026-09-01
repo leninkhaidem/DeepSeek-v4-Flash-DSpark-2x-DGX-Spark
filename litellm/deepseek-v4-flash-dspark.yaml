@@ -1,0 +1,34 @@
+model_list:
+  - model_name: sparkDV4
+    litellm_params:
+      model: openai/deepseek-v4-flash-vision-exp
+      api_base: http://127.0.0.1:8888/v1
+      api_key: dummy
+      allowed_openai_params:
+        - reasoning_effort
+    model_info:
+      mode: chat
+      max_input_tokens: 1048576
+      max_output_tokens: 32768
+      supports_vision: true
+      supports_reasoning: true
+      supports_none_reasoning_effort: true
+      supports_minimal_reasoning_effort: false
+      supports_low_reasoning_effort: true
+      supports_medium_reasoning_effort: false
+      supports_high_reasoning_effort: true
+      supports_xhigh_reasoning_effort: false
+      supports_max_reasoning_effort: true
+      supports_function_calling: true
+      supports_tool_choice: true
+      input_cost_per_token: 0
+      output_cost_per_token: 0
+      cache_read_input_token_cost: 0
+      cache_creation_input_token_cost: 0
+router_settings:
+  model_group_alias:
+    spark-active:
+      model: sparkDV4
+      hidden: true
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
