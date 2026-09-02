@@ -3,6 +3,7 @@
 ### Fixed
 
 - **Bounded streamed tool-argument silence for long DeepSeek V4 string values**: the unified parser engine gated partial argument conversion on `arg_structural_chars=frozenset(">")`, so an agent writing HTML emitted normally through `<style>` and then produced no `function.arguments` SSE deltas throughout a long CSS block. `patches/hotfix-dsv4-arg-streaming.py` now forces the existing converter and prefix-safety path after at most 512 pending argument characters. A 62K HTML/CSS parser regression emits throughout CSS and reconstructs the exact original JSON; structural-character behavior remains unchanged.
+- **Bounded replayed image history at the LiteLLM boundary**: the `sparkDV4` profile now runs a pre-call hook that retains the newest eight `image_url` / `input_image` parts, replaces older raw image payloads with one stable marker per affected message, and preserves all text and assistant analysis. The stable marker limits avoidable prefix-cache churn; the first prune still causes the expected cache miss from the removed image onward. Other model profiles are unchanged, and only LiteLLM needs a restart.
 
 ## 2026-09-01
 

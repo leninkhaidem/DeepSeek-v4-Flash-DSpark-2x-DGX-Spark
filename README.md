@@ -223,7 +223,7 @@ The 0731 abliterated freeze stays on branch `0731-ablit`.
 
 Images: OpenAI `image_url` (JPEG/PNG/GIF/WebP; GIF is still-frame). No video.
 Images belong in **`user` messages only** — `system` or `assistant` returns HTTP 400.
-Default cap 8 images (`LIMIT_MM_PER_PROMPT` is JSON `{"image":8}`; `image=8` is converted). Example:
+The `sparkDV4` LiteLLM profile retains the newest 8 raw image parts in replayed conversation history and replaces older image bytes with a stable text marker. All existing text and assistant analysis remain unchanged. Crossing that boundary causes an expected prefix-cache miss from the first removed image onward; it does not reset or corrupt the backend caches, and retained images keep their normal content hashes. The backend cap remains 8 (`LIMIT_MM_PER_PROMPT` is JSON `{"image":8}`; `image=8` is converted). Example:
 
 ```json
 {"model":"deepseek-v4-flash-vision-exp","messages":[{"role":"user","content":[

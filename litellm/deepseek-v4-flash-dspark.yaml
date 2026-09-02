@@ -30,5 +30,8 @@ router_settings:
     spark-active:
       model: sparkDV4
       hidden: true
+litellm_settings:
+  callbacks:
+    - image_history_pruner.proxy_handler_instance
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY

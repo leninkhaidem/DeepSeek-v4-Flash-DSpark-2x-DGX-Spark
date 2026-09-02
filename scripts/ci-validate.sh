@@ -43,6 +43,7 @@ py_files+=(
   scripts/test-issue31-thinking-budget-gpu.py
   scripts/test-issue55-tool-truncation.py
   scripts/test-dsv4-arg-streaming.py
+  scripts/test-litellm-image-history-pruner.py
   scripts/test-responses-api-live.py
   scripts/verify-issue138-responses-history-live.py
   scripts/test-issue138-responses-history-hotfix.py
@@ -80,6 +81,8 @@ python3 scripts/test-issue31-thinking-budget-gpu.py -q
 ok "test-issue31-thinking-budget-gpu"
 python3 scripts/test-issue55-tool-truncation.py -q
 ok "test-issue55-tool-truncation"
+python3 scripts/test-litellm-image-history-pruner.py -q
+ok "test-litellm-image-history-pruner"
 python3 scripts/test-dsv4-arg-streaming.py -q
 ok "test-dsv4-arg-streaming"
 python3 scripts/test-responses-api-live.py -q
